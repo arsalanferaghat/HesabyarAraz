@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#153b35">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>حساب‌یار | مدیریت هزینه‌ها</title>
+<style>
+:root{--bg:#f3f6f5;--card:#fff;--ink:#172b27;--muted:#71817c;--green:#176b57;--green2:#e5f3ee;--red:#b33b42;--line:#e4ebe8;--gold:#9a6a12}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif;font-size:14px;line-height:1.8}
+header{background:linear-gradient(135deg,#153b35,#20745e);color:white;padding:22px 18px 18px;border-radius:0 0 24px 24px}
+header h1{font-size:22px;margin:0 0 4px}header p{margin:0;color:#d6e9e2;font-size:12px}
+main{max-width:760px;margin:auto;padding:14px 12px 36px}
+.tabs{display:flex;gap:7px;overflow:auto;margin:14px 0}.tab{border:0;background:#e5ece9;color:#31544a;border-radius:12px;padding:10px 14px;font:inherit;white-space:nowrap}.tab.active{background:var(--green);color:white}
+.panel{display:none}.panel.active{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:15px;margin-bottom:12px;box-shadow:0 3px 14px #193b3510}
+h2{font-size:16px;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field{margin-bottom:10px}.field.full{grid-column:1/-1}label{display:block;color:var(--muted);font-size:12px;margin-bottom:4px}
+input,select,textarea{width:100%;border:1px solid #d9e3df;border-radius:10px;padding:11px;background:#fff;color:var(--ink);font:inherit;min-width:0}textarea{resize:vertical}
+button{font:inherit;cursor:pointer}.primary{border:0;background:var(--green);color:white;border-radius:11px;padding:11px 15px}.secondary{border:1px solid #cbdad4;background:#f8fbfa;color:var(--green);border-radius:10px;padding:9px 12px}.danger{border:1px solid #f0d0d1;background:#fff7f7;color:var(--red);border-radius:9px;padding:6px 9px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stat{background:var(--green2);padding:12px;border-radius:13px}.stat small{display:block;color:#53736a}.stat strong{font-size:17px;display:block;direction:rtl}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:500px}th,td{padding:9px 7px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}th{background:#f0f5f2;color:#405d53;white-space:nowrap}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.muted{color:var(--muted);font-size:12px}.positive{color:var(--green);font-weight:bold}.negative{color:var(--red);font-weight:bold}.empty{text-align:center;color:var(--muted);padding:20px}
+.person{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}.person:last-child{border:0}
+.report-head{display:none}
+footer{text-align:center;color:#71817c;font-size:11px;padding:14px}
+@media(max-width:430px){.grid{grid-template-columns:1fr 1fr}.grid .field.full{grid-column:1/-1}.tabs{gap:5px}.tab{padding:9px 11px;font-size:12px}}
+@media print{
+ @page{size:A4;margin:12mm}
+ body{background:#fff;font-size:11px;color:#111}
+ header,.tabs,.no-print,footer .screen-only{display:none!important}
+ main{max-width:none;padding:0;margin:0}
+ .panel{display:none!important}#report{display:block!important}
+ .report-head{display:block;text-align:center;margin-bottom:15px}
+ .report-head h1{font-size:20px;margin:0}.report-head p{margin:3px 0;color:#555}
+ .card{box-shadow:none;border:1px solid #ccc;border-radius:8px;padding:10px;margin-bottom:10px;break-inside:avoid}
+ h2{font-size:14px;margin-bottom:7px}
+ table{font-size:10px;min-width:0}th,td{padding:5px;border-color:#ccc}
+ .tablewrap{overflow:visible;border:0}
+ .stats{grid-template-columns:repeat(3,1fr)}.stat{background:#f2f5f3;border:1px solid #ddd;padding:7px}
+ .stat strong{font-size:13px}
+ .report-note{font-size:10px;color:#555}
+ .credit{display:block!important;text-align:center;border-top:1px solid #aaa;margin-top:14px;padding-top:8px;font-size:11px}
+}
+.credit{display:none}
+</style>
+</head>
+<body>
+<header>
+ <h1>حساب‌یار</h1>
+ <p>مدیریت هزینه‌های مشترک و محاسبه سهم افراد</p>
+</header>
+<main>
+ <div class="tabs no-print">
+  <button class="tab active" data-tab="dashboard">خلاصه حساب</button>
+  <button class="tab" data-tab="expenses">ثبت هزینه</button>
+  <button class="tab" data-tab="people">افراد</button>
+  <button class="tab" data-tab="report">گزارش و اشتراک</button>
+ </div>
+
+ <section id="dashboard" class="panel active">
+  <div class="card"><h2>وضعیت کلی</h2><div class="stats" id="stats"></div></div>
+  <div class="card"><h2>مانده حساب افراد</h2><div id="balances"></div><p class="muted">مانده مثبت یعنی فرد بیشتر از سهم خود پرداخت کرده؛ مانده منفی یعنی باید پرداخت کند.</p></div>
+  <div class="card"><h2>پیشنهاد تسویه‌حساب</h2><div id="settlements"></div><p class="muted">تسویه‌ها بر اساس کمترین تعداد پرداخت محاسبه می‌شوند و صرفاً پیشنهاد محاسباتی هستند.</p></div>
+ </section>
+
+ <section id="expenses" class="panel">
+  <div class="card">
+   <h2 id="expenseTitle">ثبت هزینه جدید</h2>
+   <form id="expenseForm">
+    <input type="hidden" id="editId">
+    <div class="grid">
+     <div class="field full"><label>موضوع هزینه</label><input id="subject" required placeholder="مثلاً خرید مواد غذایی"></div>
+     <div class="field"><label>مبلغ (تومان)</label><input id="amount" type="number" min="1" step="1" required inputmode="numeric" placeholder="مبلغ"></div>
+     <div class="field"><label>پرداخت‌کننده</label><select id="payer" required></select></div>
+     <div class="field"><label>تاریخ</label><input id="date" placeholder="مثلاً ۱۴۰۵/۰۸/۱۲"></div>
+     <div class="field full"><label>توضیحات</label><textarea id="notes" rows="2" placeholder="اختیاری"></textarea></div>
+    </div>
+    <div class="actions"><button class="primary" type="submit">ذخیره هزینه</button><button class="secondary" type="button" id="cancelEdit" hidden>لغو ویرایش</button></div>
+   </form>
+  </div>
+  <div class="card"><h2>فهرست هزینه‌ها</h2><div id="expenseList"></div></div>
+ </section>
+
+ <section id="people" class="panel">
+  <div class="card"><h2>افزودن فرد جدید</h2><div class="grid"><div class="field full"><label>نام فرد</label><input id="newPerson" placeholder="نام و نام خانوادگی"></div></div><button class="primary" id="addPerson">افزودن فرد</button></div>
+  <div class="card"><h2>افراد ثبت‌شده</h2><div id="peopleList"></div><p class="muted">حذف فردی که برای او هزینه ثبت شده، تا زمان حذف یا تغییر آن هزینه امکان‌پذیر نیست.</p></div>
+ </section>
+
+ <section id="report" class="panel">
+  <div class="card no-print">
+   <h2>خروجی قابل اشتراک</h2>
+   <p>گزارش شامل خلاصه مبالغ، تمام ریز هزینه‌ها، حساب تک‌تک افراد و پیشنهاد تسویه است. برای ساخت PDF از گزینه زیر استفاده کن.</p>
+   <div class="actions"><button class="primary" id="printBtn">تهیه خروجی PDF / چاپ</button><button class="secondary" id="shareTextBtn">اشتراک خلاصه متنی</button><button class="secondary" id="backupBtn">پشتیبان‌گیری از اطلاعات</button><label class="secondary" style="display:inline-block;cursor:pointer">بازیابی پشتیبان<input id="restoreFile" type="file" accept="application/json" hidden></label></div>
+   <p class="muted">در پنجره چاپ گوشی، گزینه «ذخیره به‌صورت PDF» را انتخاب کن و سپس فایل PDF را با هر پیام‌رسانی بفرست.</p>
+  </div>
+  <div id="printReport"></div>
+ </section>
+ <footer><span class="screen-only">اطلاعات این برنامه در حافظه مرورگر همین دستگاه ذخیره می‌شود؛ برای نگهداری امن، از داده‌ها نسخه پشتیبان بگیر.</span></footer>
+</main>
+<script>
+const KEY='hesabyar_local_v1';
+const initial={
+ people:['علی','رضا','مهدی','ارسلان'],
+ expenses:[
+  {id:1,subject:'سووپ',amount:50000,payer:'ارسلان',date:'۱۴۰۵/۰۸/۱۱',notes:''},
+  {id:2,subject:'مس',amount:100000000,payer:'علی',date:'۱۴۰۵/۰۸/۱۰',notes:''},
+  {id:3,subject:'شسب',amount:500000,payer:'رضا',date:'',notes:''},
+  {id:4,subject:'بیسل',amount:400000,payer:'مهدی',date:'',notes:''}
+ ]
+};
+let data;
+try{data=JSON.parse(localStorage.getItem(KEY))||initial}catch(e){data=initial}
+const $=id=>document.getElementById(id);
+const money=n=>Math.round(n||0).toLocaleString('en-US')+' تومان';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){alert('ذخیره‌سازی انجام نشد. فضای مرورگر را بررسی کن.')}};
+const total=()=>data.expenses.reduce((s,e)=>s+Number(e.amount||0),0);
+function accounts(){
+ const t=total(), share=data.people.length?t/data.people.length:0;
+ return data.people.map(name=>{const paid=data.expenses.filter(e=>e.payer===name).reduce((s,e)=>s+Number(e.amount||0),0);return {name,paid,share,balance:paid-share}})
+}
+function settlement(){
+ let creditors=accounts().filter(x=>x.balance>0.005).map(x=>({...x,remaining:x.balance}));
+ let debtors=accounts().filter(x=>x.balance<-.005).map(x=>({...x,remaining:-x.balance}));
+ let out=[],i=0,j=0;
+ while(i<debtors.length&&j<creditors.length){
+  let amount=Math.min(debtors[i].remaining,creditors[j].remaining);
+  if(amount>0.005)out.push({from:debtors[i].name,to:creditors[j].name,amount});
+  debtors[i].remaining-=amount;creditors[j].remaining-=amount;
+  if(debtors[i].remaining<0.01)i++;
+  if(creditors[j].remaining<0.01)j++;
+ }
+ return out;
+}
+function refresh(){
+ $('payer').innerHTML=data.people.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+ const ac=accounts(),sum=total();
+ $('stats').innerHTML=`<div class="stat"><small>مجموع هزینه‌ها</small><strong>${money(sum)}</strong></div><div class="stat"><small>تعداد افراد</small><strong>${data.people.length}</strong></div><div class="stat"><small>تعداد هزینه‌ها</small><strong>${data.expenses.length.toLocaleString('en-US')}</strong></div><div class="stat"><small>سهم هر نفر</small><strong>${money(data.people.length?sum/data.people.length:0)}</strong></div>`;
+ $('balances').innerHTML=ac.length?ac.map(a=>`<div class="person"><span>${esc(a.name)}</span><span class="${a.balance>=0?'positive':'negative'}">${a.balance>=0?'طلبکار ':'بدهکار '}${money(Math.abs(a.balance))}</span></div>`).join(''):'<div class="empty">هنوز فردی ثبت نشده است.</div>';
+ const st=settlement();
+ $('settlements').innerHTML=st.length?st.map(x=>`<div class="person"><span>${esc(x.from)} به ${esc(x.to)} پرداخت کند</span><b>${money(x.amount)}</b></div>`).join(''):'<div class="empty">در حال حاضر تسویه‌ای لازم نیست.</div>';
+ $('expenseList').innerHTML=data.expenses.length?`<div class="tablewrap"><table><thead><tr><th>موضوع</th><th>مبلغ</th><th>پرداخت‌کننده</th><th>تاریخ</th><th>عملیات</th></tr></thead><tbody>${data.expenses.map(e=>`<tr><td>${esc(e.subject)}</td><td>${money(e.amount)}</td><td>${esc(e.payer)}</td><td>${esc(e.date)}</td><td><button class="secondary" onclick="editExpense(${e.id})">ویرایش</button> <button class="danger" onclick="deleteExpense(${e.id})">حذف</button></td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">هنوز هزینه‌ای ثبت نشده است.</div>';
+ $('peopleList').innerHTML=data.people.length?data.people.map(p=>`<div class="person"><b>${esc(p)}</b><button class="danger" onclick="deletePerson('${encodeURIComponent(p)}')">حذف</button></div>`).join(''):'<div class="empty">فردی ثبت نشده است.</div>';
+ buildReport();
+}
+function buildReport(){
+ const ac=accounts(),st=settlement(),sum=total(),share=data.people.length?sum/data.people.length:0;
+ const expenseRows=data.expenses.map((e,i)=>`<tr><td>${i+1}</td><td>${esc(e.subject)}</td><td>${money(e.amount)}</td><td>${esc(e.payer)}</td><td>${esc(e.date||'—')}</td><td>${esc(e.notes||'—')}</td></tr>`).join('');
+ const accountRows=ac.map(a=>`<tr><td>${esc(a.name)}</td><td>${money(a.paid)}</td><td>${money(a.share)}</td><td class="${a.balance>=0?'positive':'negative'}">${a.balance>=0?'طلبکار ':'بدهکار '}${money(Math.abs(a.balance))}</td></tr>`).join('');
+ const settleRows=st.map(x=>`<tr><td>${esc(x.from)}</td><td>${esc(x.to)}</td><td>${money(x.amount)}</td></tr>`).join('');
+ $('printReport').innerHTML=`<div class="report-head"><h1>گزارش شفاف هزینه‌های مشترک</h1><p>گزارش حساب و تسویه افراد</p><p>تاریخ تهیه: ${new Date().toLocaleDateString('fa-IR')}</p></div>
+ <div class="card"><h2>خلاصه مالی</h2><div class="stats"><div class="stat"><small>مجموع هزینه‌ها</small><strong>${money(sum)}</strong></div><div class="stat"><small>تعداد افراد</small><strong>${data.people.length}</strong></div><div class="stat"><small>سهم هر نفر</small><strong>${money(share)}</strong></div></div><p class="report-note">روش محاسبه: مجموع تمام هزینه‌های ثبت‌شده تقسیم بر تعداد افراد؛ پرداخت هر فرد با سهم مساوی او مقایسه شده است.</p></div>
+ <div class="card"><h2>۱. ریز تمام هزینه‌ها</h2><div class="tablewrap"><table><thead><tr><th>ردیف</th><th>موضوع</th><th>مبلغ</th><th>پرداخت‌کننده</th><th>تاریخ</th><th>توضیحات</th></tr></thead><tbody>${expenseRows||'<tr><td colspan="6">هزینه‌ای ثبت نشده است.</td></tr>'}</tbody></table></div></div>
+ <div class="card"><h2>۲. حساب افراد</h2><div class="tablewrap"><table><thead><tr><th>نام</th><th>کل پرداختی</th><th>سهم مساوی</th><th>مانده حساب</th></tr></thead><tbody>${accountRows||'<tr><td colspan="4">فردی ثبت نشده است.</td></tr>'}</tbody></table></div><p class="report-note">مانده مثبت = طلبکار؛ مانده منفی = بدهکار. به دلیل تقسیم مبالغ، ممکن است اختلاف چند ریالی ناشی از اعشار سهم مساوی وجود داشته باشد.</p></div>
+ <div class="card"><h2>۳. جدول پیشنهادی تسویه</h2><div class="tablewrap"><table><thead><tr><th>پرداخت‌کننده</th><th>دریافت‌کننده</th><th>مبلغ پرداخت</th></tr></thead><tbody>${settleRows||'<tr><td colspan="3">تسویه‌ای لازم نیست.</td></tr>'}</tbody></table></div></div>
+ <div class="credit">طراحی و برنامه‌نویسی: ارسلان فراغت</div>`;
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab,.panel').forEach(x=>x.classList.remove('active'));b.classList.add('active');$(b.dataset.tab).classList.add('active');if(b.dataset.tab==='report')buildReport()}));
+$('expenseForm').addEventListener('submit',e=>{
+ e.preventDefault();const id=$('editId').value;
+ const obj={id:id?Number(id):Date.now(),subject:$('subject').value.trim(),amount:Number($('amount').value),payer:$('payer').value,date:$('date').value.trim(),notes:$('notes').value.trim()};
+ if(!obj.payer){alert('ابتدا یک فرد اضافه کن.');return}
+ if(id){data.expenses=data.expenses.map(x=>x.id===Number(id)?obj:x)}else data.expenses.push(obj);
+ save();e.target.reset();$('editId').value='';$('expenseTitle').textContent='ثبت هزینه جدید';$('cancelEdit').hidden=true;refresh();
+});
+window.editExpense=id=>{const e=data.expenses.find(x=>x.id===id);if(!e)return;$('editId').value=e.id;$('subject').value=e.subject;$('amount').value=e.amount;$('payer').value=e.payer;$('date').value=e.date;$('notes').value=e.notes;$('expenseTitle').textContent='ویرایش هزینه';$('cancelEdit').hidden=false;document.querySelector('[data-tab="expenses"]').click();window.scrollTo(0,0)};
+window.deleteExpense=id=>{if(confirm('این هزینه حذف شود؟')){data.expenses=data.expenses.filter(x=>x.id!==id);save();refresh()}};
+$('cancelEdit').onclick=()=>{$('expenseForm').reset();$('editId').value='';$('expenseTitle').textContent='ثبت هزینه جدید';$('cancelEdit').hidden=true};
+$('addPerson').onclick=()=>{let p=$('newPerson').value.trim();if(!p)return;if(data.people.includes(p)){alert('این نام قبلاً ثبت شده است.');return}data.people.push(p);$('newPerson').value='';save();refresh()};
+window.deletePerson=encoded=>{let p=decodeURIComponent(encoded);if(data.expenses.some(e=>e.payer===p)){alert('برای این فرد هزینه ثبت شده است. ابتدا پرداخت‌های مربوط را ویرایش یا حذف کن.');return}if(confirm('فرد حذف شود؟')){data.people=data.people.filter(x=>x!==p);save();refresh()}};
+$('printBtn').onclick=()=>{buildReport();window.print()};
+$('backupBtn').onclick=()=>{const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='hesabyar-backup.json';a.click();URL.revokeObjectURL(url)};
+$('restoreFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());if(!Array.isArray(d.people)||!Array.isArray(d.expenses))throw new Error();if(confirm('اطلاعات فعلی با نسخه پشتیبان جایگزین شود؟')){data=d;save();refresh();alert('بازیابی انجام شد.')}}catch(err){alert('فایل پشتیبان معتبر نیست.')}e.target.value=''};
+$('shareTextBtn').onclick=async()=>{const ac=accounts(),st=settlement();let t='گزارش هزینه‌های مشترک\\nمجموع: '+money(total())+'\\n\\nحساب افراد:\\n'+ac.map(a=>a.name+': پرداختی '+money(a.paid)+'، سهم '+money(a.share)+'، مانده '+(a.balance>=0?'طلبکار ':'بدهکار ')+money(Math.abs(a.balance))).join('\\n')+'\\n\\nتسویه پیشنهادی:\\n'+(st.map(x=>x.from+' به '+x.to+': '+money(x.amount)).join('\\n')||'نیازی به تسویه نیست')+'\\n\\nطراحی و برنامه‌نویسی: ارسلان فراغت';if(navigator.share){try{await navigator.share({title:'گزارش هزینه‌ها',text:t})}catch(e){}}else{try{await navigator.clipboard.writeText(t);alert('متن گزارش کپی شد.')}catch(e){alert(t)}}};
+refresh();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) { window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>
