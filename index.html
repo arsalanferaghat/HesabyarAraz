@@ -51,8 +51,8 @@ footer{text-align:center;color:#71817c;font-size:11px;padding:14px}
 </head>
 <body>
 <header>
- <h1>حساب‌0000000000یار</h1>
- <p> 3333333333333333هزینه‌های مشترک و محاسبه سهم افراد</p>
+ <h1>حسابرس آراز</h1>
+ <p>هزینه‌های مشترک و محاسبه سهم افراد</p>
 </header>
 <main>
  <div class="tabs no-print">
@@ -74,7 +74,7 @@ footer{text-align:center;color:#71817c;font-size:11px;padding:14px}
    <form id="expenseForm">
     <input type="hidden" id="editId">
     <div class="grid">
-     <div class="field full"><label>موضوع هزینه</label><input id="subject" required placeholder="مثلاً خرید مواد غذایی"></div>
+     <div class="field full"><label>موضوع هزینه</label><input id="subject" required placeholder="موارد هزینه شده"></div>
      <div class="field"><label>مبلغ (تومان)</label><input id="amount" type="number" min="1" step="1" required inputmode="numeric" placeholder="مبلغ"></div>
      <div class="field"><label>پرداخت‌کننده</label><select id="payer" required></select></div>
      <div class="field"><label>تاریخ</label><input id="date" placeholder="مثلاً ۱۴۰۵/۰۸/۱۲"></div>
@@ -101,16 +101,15 @@ footer{text-align:center;color:#71817c;font-size:11px;padding:14px}
   <div id="printReport"></div>
  </section>
  <footer><span class="screen-only">اطلاعات این برنامه در حافظه مرورگر همین دستگاه ذخیره می‌شود؛ برای نگهداری امن، از داده‌ها نسخه پشتیبان بگیر.</span></footer>
+  <footer><span class="screen-only">طراحی : ارسلان فراغت.</span></footer>
 </main>
 <script>
 const KEY='hesabyar_local_v1';
 const initial={
  people:['علی','رضا','مهدی','ارسلان'],
  expenses:[
-  {id:1,subject:'سووپ',amount:50000,payer:'ارسلان',date:'۱۴۰۵/۰۸/۱۱',notes:''},
-  {id:2,subject:'مس',amount:100000000,payer:'علی',date:'۱۴۰۵/۰۸/۱۰',notes:''},
-  {id:3,subject:'شسب',amount:500000,payer:'رضا',date:'',notes:''},
-  {id:4,subject:'بیسل',amount:400000,payer:'مهدی',date:'',notes:''}
+  {id:1,subject:'ساندویچ',amount:50000,payer:'ارسلان',date:'۱۴۰۵/۰۸/۱۱',notes:''},
+
  ]
 };
 let data;
