@@ -8,7 +8,7 @@
 <link rel="icon" href="icons/icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<title>حساب‌یار | مدیریت هزینه‌ها</title>
+<title>حساب‌یار7777777777 | مدیریت هزینه‌ها</title>
 <style>
 :root{--bg:#f3f6f5;--card:#fff;--ink:#172b27;--muted:#71817c;--green:#176b57;--green2:#e5f3ee;--red:#b33b42;--line:#e4ebe8;--gold:#9a6a12}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif;font-size:14px;line-height:1.8}
@@ -64,8 +64,8 @@ footer{text-align:center;color:#71817c;font-size:11px;padding:14px}
 
  <section id="dashboard" class="panel active">
   <div class="card"><h2>وضعیت کلی</h2><div class="stats" id="stats"></div></div>
-  <div class="card"><h2>مانده حساب افراد</h2><div id="balances"></div><p class="muted">مانده مثبت یعنی فرد بیشتر از سهم خود پرداخت کرده؛ مانده منفی یعنی باید پرداخت کند.</p></div>
-  <div class="card"><h2>پیشنهاد تسویه‌حساب</h2><div id="settlements"></div><p class="muted">تسویه‌ها بر اساس کمترین تعداد پرداخت محاسبه می‌شوند و صرفاً پیشنهاد محاسباتی هستند.</p></div>
+  <div class="card"><h2>مانده  افراد</h2><div id="balances"></div><p class="muted">مانده مثبت یعنی فرد بیشتر از سهم خود پرداخت کرده؛ مانده منفی یعنی باید پرداخت کند.</p></div>
+  <div class="card"><h2>پیشنهاد تسویه‌</h2><div id="settlements"></div><p class="muted">تسویه‌ها بر اساس کمترین تعداد پرداخت محاسبه می‌شوند و صرفاً پیشنهاد محاسباتی هستند.</p></div>
  </section>
 
  <section id="expenses" class="panel">
@@ -94,7 +94,7 @@ footer{text-align:center;color:#71817c;font-size:11px;padding:14px}
  <section id="report" class="panel">
   <div class="card no-print">
    <h2>خروجی قابل اشتراک</h2>
-   <p>گزارش شامل خلاصه مبالغ، تمام ریز هزینه‌ها، حساب تک‌تک افراد و پیشنهاد تسویه است. برای ساخت PDF از گزینه زیر استفاده کن.</p>
+   <p>گزارش شامل خلاصه مبالغ، تمام ریز هزینه‌ها،  تک‌تک افراد و پیشنهاد تسویه است. برای ساخت PDF از گزینه زیر استفاده کن.</p>
    <div class="actions"><button class="primary" id="printBtn">تهیه خروجی PDF / چاپ</button><button class="secondary" id="shareTextBtn">اشتراک خلاصه متنی</button><button class="secondary" id="backupBtn">پشتیبان‌گیری از اطلاعات</button><label class="secondary" style="display:inline-block;cursor:pointer">بازیابی پشتیبان<input id="restoreFile" type="file" accept="application/json" hidden></label></div>
    <p class="muted">در پنجره چاپ گوشی، گزینه «ذخیره به‌صورت PDF» را انتخاب کن و سپس فایل PDF را با هر پیام‌رسانی بفرست.</p>
   </div>
@@ -153,10 +153,10 @@ function buildReport(){
  const expenseRows=data.expenses.map((e,i)=>`<tr><td>${i+1}</td><td>${esc(e.subject)}</td><td>${money(e.amount)}</td><td>${esc(e.payer)}</td><td>${esc(e.date||'—')}</td><td>${esc(e.notes||'—')}</td></tr>`).join('');
  const accountRows=ac.map(a=>`<tr><td>${esc(a.name)}</td><td>${money(a.paid)}</td><td>${money(a.share)}</td><td class="${a.balance>=0?'positive':'negative'}">${a.balance>=0?'طلبکار ':'بدهکار '}${money(Math.abs(a.balance))}</td></tr>`).join('');
  const settleRows=st.map(x=>`<tr><td>${esc(x.from)}</td><td>${esc(x.to)}</td><td>${money(x.amount)}</td></tr>`).join('');
- $('printReport').innerHTML=`<div class="report-head"><h1>گزارش شفاف هزینه‌های مشترک</h1><p>گزارش حساب و تسویه افراد</p><p>تاریخ تهیه: ${new Date().toLocaleDateString('fa-IR')}</p></div>
+ $('printReport').innerHTML=`<div class="report-head"><h1>گزارش شفاف هزینه‌های مشترک</h1><p>گزارش  و تسویه افراد</p><p>تاریخ تهیه: ${new Date().toLocaleDateString('fa-IR')}</p></div>
  <div class="card"><h2>خلاصه مالی</h2><div class="stats"><div class="stat"><small>مجموع هزینه‌ها</small><strong>${money(sum)}</strong></div><div class="stat"><small>تعداد افراد</small><strong>${data.people.length}</strong></div><div class="stat"><small>سهم هر نفر</small><strong>${money(share)}</strong></div></div><p class="report-note">روش محاسبه: مجموع تمام هزینه‌های ثبت‌شده تقسیم بر تعداد افراد؛ پرداخت هر فرد با سهم مساوی او مقایسه شده است.</p></div>
  <div class="card"><h2>۱. ریز تمام هزینه‌ها</h2><div class="tablewrap"><table><thead><tr><th>ردیف</th><th>موضوع</th><th>مبلغ</th><th>پرداخت‌کننده</th><th>تاریخ</th><th>توضیحات</th></tr></thead><tbody>${expenseRows||'<tr><td colspan="6">هزینه‌ای ثبت نشده است.</td></tr>'}</tbody></table></div></div>
- <div class="card"><h2>۲. حساب افراد</h2><div class="tablewrap"><table><thead><tr><th>نام</th><th>کل پرداختی</th><th>سهم مساوی</th><th>مانده حساب</th></tr></thead><tbody>${accountRows||'<tr><td colspan="4">فردی ثبت نشده است.</td></tr>'}</tbody></table></div><p class="report-note">مانده مثبت = طلبکار؛ مانده منفی = بدهکار. به دلیل تقسیم مبالغ، ممکن است اختلاف چند ریالی ناشی از اعشار سهم مساوی وجود داشته باشد.</p></div>
+ <div class="card"><h2>۲.  افراد</h2><div class="tablewrap"><table><thead><tr><th>نام</th><th>کل پرداختی</th><th>سهم مساوی</th><th>مانده </th></tr></thead><tbody>${accountRows||'<tr><td colspan="4">فردی ثبت نشده است.</td></tr>'}</tbody></table></div><p class="report-note">مانده مثبت = طلبکار؛ مانده منفی = بدهکار. به دلیل تقسیم مبالغ، ممکن است اختلاف چند ریالی ناشی از اعشار سهم مساوی وجود داشته باشد.</p></div>
  <div class="card"><h2>۳. جدول پیشنهادی تسویه</h2><div class="tablewrap"><table><thead><tr><th>پرداخت‌کننده</th><th>دریافت‌کننده</th><th>مبلغ پرداخت</th></tr></thead><tbody>${settleRows||'<tr><td colspan="3">تسویه‌ای لازم نیست.</td></tr>'}</tbody></table></div></div>
  <div class="credit">طراحی و برنامه‌نویسی: ارسلان فراغت</div>`;
 }
